@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>615</width>
+    <height>380</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tables">
+       <attribute name="title">
+        <string>Таблицы</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="AirlineAllianceLabel">
+          <property name="text">
+           <string>OneWorld - Airline Alliance</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="AirlinesLabel">
+          <property name="text">
+           <string>Airlines</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTableView" name="AirlineAllianceTableView"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QTableView" name="AirlinesTableView"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="AirplaneLabel">
+          <property name="text">
+           <string>Airplanes</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="AirportLabel">
+          <property name="text">
+           <string>Airports</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QTableView" name="AirportTableView"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QTableView" name="AirplaneTableView"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="query">
+       <attribute name="title">
+        <string>Запросы</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0" colspan="2">
+         <widget class="QComboBox" name="queryComboBox"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTextEdit" name="sqlTextEdit"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QTableView" name="resultTableView"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>615</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
