@@ -6,9 +6,59 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setup();
+    setRequests();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete mainWindowController;
+}
+
+void MainWindow::viewTables()
+{
+    //ui->AirlineAllianceTableView
+}
+
+void MainWindow::setRequests()
+{
+    ui->queryComboBox->addItem("Все самолеты авиакомпании Аэрофлот старше 30 лет");
+    ui->queryComboBox->addItem("Список авиакомпаний из альянса OneWorld, которые вошли в него в 2008 году и вышли в 2010");
+    ui->queryComboBox->addItem("Все общие рейсы авиакомпаний   ");
+    ui->queryComboBox->addItem("Все самолеты из альянса OneWorld");
+}
+
+void MainWindow::setup()
+{
+    mainWindowController = new MainWindowController();
+    connect(mainWindowController->getSqliteAdapter(), SIGNAL(databaseIsOpen()), this, SLOT(showDatabaseConnected()));
+    connect(mainWindowController->getSqliteAdapter(), SIGNAL(databaseIsNotOpen()), this, SLOT(showDatabaseDisconnected()));
+    connect(mainWindowController->getSqliteAdapter(), SIGNAL(databaseIsOpen()), this, SLOT(setupDatabaseWidgets()));
+    mainWindowController->openDatabase();
+}
+
+void MainWindow::on_queryComboBox_activated(int index)
+{
+    switch (index)
+       {
+       case 0:
+           qDebug() << "Все самолеты авиакомпании Аэрофлот старше 30 лет";
+           break;
+
+       case 1:
+           qDebug() << "Список авиакомпаний из альянса OneWorld, которые вошли в него в 2008 году и вышли в 2010";
+           break;
+
+       case 2:
+           qDebug() << "Все общие рейсы авиакомпаний   ";
+           break;
+
+       case 3:
+           qDebug() << "Все самолеты из альянса OneWorld";
+           break;
+
+       default:
+           break;
+       }
 }

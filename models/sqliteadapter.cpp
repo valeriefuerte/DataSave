@@ -25,16 +25,14 @@ void SQLiteAdapter::open()
     qDebug() << query.exec("PRAGMA foreign_keys = ON;");
 
     qDebug() << db;
-    qDebug() << db.tables();/*
-    qDebug() << readFromTable("weight", "Hen");
-    qDebug() << readFromTable("age", "Hen");*/
+    qDebug() << "db.tables" << db.tables();
 }
 
 QStringList SQLiteAdapter::readFromTable(QString data, QString tableName)
 {
     QStringList response;
     QString request = "SELECT " + data + " FROM " + tableName + ";";
-    //qDebug() << request;
+    qDebug() << "request readFromTable" << request;
     QSqlQuery query;
     if(query.prepare(request))
     {
@@ -102,124 +100,6 @@ QString SQLiteAdapter::getDatabaseName()
 QStringList SQLiteAdapter::getTablesNames()
 {
     return db.tables();
-}
-
-void SQLiteAdapter::insertData(QString tableName, QStringList arguments, QStringList data)
-{
-    QString request = "INSERT INTO " + tableName + "(";
-    unsigned int argumentsLength = arguments.length();
-    for(unsigned int i = 0; i < argumentsLength - 1; i++)
-    {
-        QString tmp = arguments[i] + ", ";
-        request += tmp;
-    }
-    request += arguments[argumentsLength - 1] + ") VALUES (";
-    unsigned int dataLength = data.length();
-    for(unsigned int i = 0; i < dataLength - 1; i++)
-    {
-        QString tmp = data[i] + ", ";
-        request += tmp;
-    }
-    request += data[dataLength - 1] + ")";
-    qDebug() << request;
-    QSqlQuery query;
-    if(query.prepare(request))
-    {
-        if(query.exec())
-        {
-            if(query.lastError().text() != " ")
-            {
-                qDebug() << query.lastError().text();
-            }
-        }
-        else
-        {
-            QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу выполнить запрос!");
-        }
-    }
-    else
-    {
-        QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу подготовить запрос!");
-    }
-    emit databaseStateIsChanged();
-}
-
-void SQLiteAdapter::deleteData(QString tableName, QString key, QString value)
-{
-    QString request = "DELETE FROM " + tableName + " WHERE " + key + " = " + value + ";";
-    qDebug() << request;
-    QSqlQuery query;
-    if(query.prepare(request))
-    {
-        if(query.exec())
-        {
-            if(query.lastError().text() != " ")
-            {
-                qDebug() << query.lastError().text();
-            }
-        }
-        else
-        {
-            QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу выполнить запрос!");
-        }
-    }
-    else
-    {
-        QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу подготовить запрос!");
-    }
-    emit databaseStateIsChanged();
-}
-
-void SQLiteAdapter::deleteData(QString tableName, QString condition)
-{
-    QString request = "DELETE FROM " + tableName + " WHERE " + condition + ";";
-    qDebug() << request;
-    QSqlQuery query;
-    if(query.prepare(request))
-    {
-        if(query.exec())
-        {
-            if(query.lastError().text() != " ")
-            {
-                qDebug() << query.lastError().text();
-            }
-        }
-        else
-        {
-            QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу выполнить запрос!");
-        }
-    }
-    else
-    {
-        QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу подготовить запрос!");
-    }
-    emit databaseStateIsChanged();
-}
-
-void SQLiteAdapter::updateData(QString tableName, QString updateKey, QString updateValue, QString findKey, QString findValue)
-{
-    QString request = "UPDATE " + tableName + " SET " + updateKey + " = " + updateValue + " WHERE " + findKey + " = " + findValue;
-    //qDebug() << request;
-    QSqlQuery query;
-    if(query.prepare(request))
-    {
-        if(query.exec())
-        {
-            if(query.lastError().text() != " ")
-            {
-                qDebug() << query.lastError().text();
-            }
-        }
-        else
-        {
-            QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу выполнить запрос!");
-        }
-    }
-    else
-    {
-        QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу подготовить запрос!");
-    }
-    emit databaseStateIsChanged();
 }
 
 QSqlQuery SQLiteAdapter::runSQL(QString request)
