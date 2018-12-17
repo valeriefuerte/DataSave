@@ -51,7 +51,6 @@ void MainWindow::showDatabaseConnected()
 void MainWindow::updateOneWorld()
 {
     QList< QList<QTableWidgetItem*> > OneWorld = mainWindowController->getOneWorld();
-    qDebug() << "Fail!";
     QStringList labels = {
         "Название",
         "Страна",

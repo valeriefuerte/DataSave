@@ -21,24 +21,14 @@ public:
     QStringList getTablesNames();
     QStringList readFromTable(QString data, QString tableName);
 
-    QStringList getAllAirlinesList();
-    //QStringList getAllFreeCagesList();
-
     QList<QList<QTableWidgetItem *> > getOneWorld();
     QList<QList<QTableWidgetItem *> > getAirlines();
     QList<QList<QTableWidgetItem *> > getAirplanes();
     QList<QList<QTableWidgetItem *> > getAirport();
 
-    void setBuffer(const QString &value);
-
-    QString getBuffer() const;
-
-signals:
-
 private:
     SQLiteAdapter* sqliteAdapter;
     QString path = "models/tables.db";
-    QString buffer;
 
     void setupSQLiteAdapter();
 };

@@ -47,12 +47,6 @@ QStringList MainWindowController::readFromTable(QString data, QString tableName)
     return sqliteAdapter->readFromTable(data, tableName);
 }
 
-QStringList MainWindowController::getAllAirlinesList()
-{
-    qDebug() << "get airlines names" << sqliteAdapter->readFromTable("Name", "Airlines");
-    return sqliteAdapter->readFromTable("Name", "Airlines");
-}
-
 /*QStringList MainWindowController::getAllFreeCagesList()
 {
     QStringList freeCages;
@@ -177,16 +171,6 @@ QList<QList<QTableWidgetItem *> > MainWindowController::getAirport()
     }
 
     return Airports;
-}
-
-void MainWindowController::setBuffer(const QString &value)
-{
-    buffer = value;
-}
-
-QString MainWindowController::getBuffer() const
-{
-    return buffer;
 }
 
 void MainWindowController::setupSQLiteAdapter()
