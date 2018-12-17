@@ -90,6 +90,7 @@ QStringList SQLiteAdapter::readFromTable(QString data, QString tableName, QStrin
     {
         QMessageBox(QMessageBox::Warning, "Ошибка", "Не могу подготовить запрос!");
     }
+    qDebug() << response << "\n";
     return response;
 }
 

@@ -52,6 +52,7 @@ void MainWindow::updateOneWorld()
 {
     QList< QList<QTableWidgetItem*> > OneWorld = mainWindowController->getOneWorld();
     QStringList labels = {
+        "Код",
         "Название",
         "Страна",
         "Дата входа",
@@ -61,7 +62,7 @@ void MainWindow::updateOneWorld()
     ui->AirlineAllianceTableWidget->setHorizontalHeaderLabels(labels);
     ui->AirlineAllianceTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->AirlineAllianceTableWidget->setRowCount(OneWorld.size());
-
+    ui->AirlineAllianceTableWidget->setColumnHidden(0, true);
 
     for(int i = 0; i < OneWorld.size(); i++)
     {

@@ -67,30 +67,28 @@ QStringList MainWindowController::readFromTable(QString data, QString tableName)
 QList<QList<QTableWidgetItem *> > MainWindowController::getOneWorld()
 {
     QList< QList<QTableWidgetItem*> > oneWorld;
-    QStringList airlinesNames = sqliteAdapter->readFromTable("Name", "OneWorld");
+    QStringList airlinesNames = sqliteAdapter->readFromTable("Code", "OneWorld");
 
     for(auto airlineName : airlinesNames)
     {
-        QList<QTableWidgetItem*> name;
+        QList<QTableWidgetItem*> code;
         QTableWidgetItem* item = new QTableWidgetItem(airlineName);
-        name.push_back(item);
-        oneWorld.push_back(name);
+        code.push_back(item);
+        oneWorld.push_back(code);
     }
-
     for(int i = 0; i < airlinesNames.size(); i++)
     {
-        QString condition = "Name = " + airlinesNames[i];
+        QString condition = "Code = " + airlinesNames[i];
+        QStringList name = sqliteAdapter->readFromTable("Name", "OneWorld", condition);
         QStringList country = sqliteAdapter->readFromTable("Country", "OneWorld", condition);
-        QStringList loginDate = sqliteAdapter->readFromTable("Login Date", "OneWorld", condition);
-        QStringList releaseDate = sqliteAdapter->readFromTable("Release Date", "OneWorld", condition);
+        QStringList loginDate = sqliteAdapter->readFromTable("LoginDate", "OneWorld", condition);
+        QStringList releaseDate = sqliteAdapter->readFromTable("ReleaseDate", "OneWorld", condition);
 
-        /*oneWorld[i].push_back(new QTableWidgetItem(country[0]));
-        qDebug() << country[0];
+        oneWorld[i].push_back(new QTableWidgetItem(name[0]));
+        oneWorld[i].push_back(new QTableWidgetItem(country[0]));
         oneWorld[i].push_back(new QTableWidgetItem(loginDate[0]));
         oneWorld[i].push_back(new QTableWidgetItem(releaseDate[0]));
-        qDebug() << oneWorld;*/
     }
-    qDebug() << "Fail!";
     return oneWorld;
 }
 
