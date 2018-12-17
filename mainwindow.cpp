@@ -61,46 +61,16 @@ void MainWindow::updateOneWorld()
     ui->AirlineAllianceTableWidget->setColumnCount(labels.size());
     ui->AirlineAllianceTableWidget->setHorizontalHeaderLabels(labels);
     ui->AirlineAllianceTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->AirlineAllianceTableWidget->setRowCount(OneWorld.size());
 
-/*
-    ui->workersTableWidget->setColumnCount(labels.size());
-    ui->workersTableWidget->setHorizontalHeaderLabels(labels);
-    ui->workersTableWidget->setRowCount(workers.size());
-    for(int i = 0; i < workers.size(); i++)
+
+    for(int i = 0; i < OneWorld.size(); i++)
     {
-        for(int j = 0; j < workers[i].size(); j++)
+        for(int j = 0; j < OneWorld[i].size(); j++)
         {
-            ui->workersTableWidget->setItem(i, j, workers[i][j]);
+            ui->AirlineAllianceTableWidget->setItem(i, j, OneWorld[i][j]);
         }
     }
-
-
-    QStringList workersCages;
-    for(int i = 0; i < workers.size(); i++)
-    {
-        QString condition = "worker = " + workers[i][0]->text();
-        QStringList cagesManufactoryNumbers = mainWindowController->getSqliteAdapter()->readFromTable("manufactory_number", "Cage", condition);
-        QStringList cagesRowNumbers = mainWindowController->getSqliteAdapter()->readFromTable("row_number", "Cage", condition);
-        QStringList cagesNumbers = mainWindowController->getSqliteAdapter()->readFromTable("cage_number", "Cage", condition);
-
-        size_t length = std::min(cagesManufactoryNumbers.size(), std::min(cagesRowNumbers.size(), cagesNumbers.size()));
-        QString cages;
-        for(size_t j = 0; j < length; j++)
-        {
-            QString cage = cagesManufactoryNumbers[j] + ":" + cagesRowNumbers[j] + ":" + cagesNumbers[j];
-            cages += cage + "; ";
-        }
-        workersCages.push_back(cages);
-    }
-
-    for(size_t i = 0; i < workers.size(); i++)
-    {
-        ui->workersTableWidget->setItem(i, workers[i].size(), new QTableWidgetItem(workersCages[i]));
-    }
-
-    ui->workersTableWidget->resizeColumnsToContents();
-    ui->workersTableWidget->verticalHeader()->hide();
-    */
 }
 
 void MainWindow::updateAirlines()
