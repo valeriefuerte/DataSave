@@ -28,11 +28,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    models/sqliteadapter.cpp
+    models/sqliteadapter.cpp \
+    mainwindowcontroller.cpp
 
 HEADERS += \
         mainwindow.h \
-    models/sqliteadapter.h
+    models/sqliteadapter.h \
+    mainwindowcontroller.h
 
 FORMS += \
         mainwindow.ui
