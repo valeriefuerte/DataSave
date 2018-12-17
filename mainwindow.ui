@@ -39,9 +39,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QTableView" name="AirlinesTableView"/>
-        </item>
         <item row="2" column="0">
          <widget class="QLabel" name="AirplaneLabel">
           <property name="text">
@@ -56,14 +53,17 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QTableView" name="AirportTableView"/>
-        </item>
-        <item row="3" column="0">
-         <widget class="QTableView" name="AirplaneTableView"/>
-        </item>
         <item row="1" column="0">
          <widget class="QTableWidget" name="AirlineAllianceTableWidget"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QTableWidget" name="AirlinesTableWidget"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QTableWidget" name="AirplaneTableWidget"/>
+        </item>
+        <item row="3" column="1">
+         <widget class="QTableWidget" name="AirportTableWidget"/>
         </item>
        </layout>
       </widget>

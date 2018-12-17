@@ -36,6 +36,9 @@ void MainWindow::setupDatabaseWidgets()
 void MainWindow::viewTables()
 {
     updateOneWorld();
+    updateAirlines();
+    updateAirplanes();
+    updateAirports();
 }
 
 void MainWindow::showDatabaseDisconnected()
@@ -75,17 +78,75 @@ void MainWindow::updateOneWorld()
 
 void MainWindow::updateAirlines()
 {
+    QList< QList<QTableWidgetItem*> > Airlines = mainWindowController->getAirlines();
+    QStringList labels = {
+        "Код",
+        "Название",
+        "Самолет",
+        "Вылет из",
+        "Полет в"
+    };
+    ui->AirlinesTableWidget->setColumnCount(labels.size());
+    ui->AirlinesTableWidget->setHorizontalHeaderLabels(labels);
+    ui->AirlinesTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->AirlinesTableWidget->setRowCount(Airlines.size());
+    ui->AirlinesTableWidget->setColumnHidden(0, true);
 
+    for(int i = 0; i < Airlines.size(); i++)
+    {
+        for(int j = 0; j < Airlines[i].size(); j++)
+        {
+            ui->AirlinesTableWidget->setItem(i, j, Airlines[i][j]);
+        }
+    }
 }
 
 void MainWindow::updateAirplanes()
 {
+    QList< QList<QTableWidgetItem*> > Airplanes = mainWindowController->getAirplanes();
+    QStringList labels = {
+        "Код",
+        "Тип самолета",
+        "Дата начала эксплуатации"
+    };
+    ui->AirplaneTableWidget->setColumnCount(labels.size());
+    ui->AirplaneTableWidget->setHorizontalHeaderLabels(labels);
+    ui->AirplaneTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->AirplaneTableWidget->setRowCount(Airplanes.size());
+    ui->AirplaneTableWidget->setColumnHidden(0, true);
 
+    for(int i = 0; i < Airplanes.size(); i++)
+    {
+        for(int j = 0; j < Airplanes[i].size(); j++)
+        {
+            ui->AirplaneTableWidget->setItem(i, j, Airplanes[i][j]);
+        }
+    }
 }
 
 void MainWindow::updateAirports()
 {
+    QList< QList<QTableWidgetItem*> > Airports = mainWindowController->getAirport();
+    QStringList labels = {
+        "Код",
+        "Название",
+        "Местоположение",
+        "Тип самолета",
+        "Терминал"
+    };
+    ui->AirportTableWidget->setColumnCount(labels.size());
+    ui->AirportTableWidget->setHorizontalHeaderLabels(labels);
+    ui->AirportTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->AirportTableWidget->setRowCount(Airports.size());
+    ui->AirportTableWidget->setColumnHidden(0, true);
 
+    for(int i = 0; i < Airports.size(); i++)
+    {
+        for(int j = 0; j < Airports[i].size(); j++)
+        {
+            ui->AirportTableWidget->setItem(i, j, Airports[i][j]);
+        }
+    }
 }
 
 void MainWindow::setRequests()

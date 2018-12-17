@@ -95,23 +95,25 @@ QList<QList<QTableWidgetItem *> > MainWindowController::getOneWorld()
 QList<QList<QTableWidgetItem *> > MainWindowController::getAirlines()
 {
     QList< QList<QTableWidgetItem*> > Airlines;
-    QStringList airlinesNames = sqliteAdapter->readFromTable("Name", "Airlines");
+    QStringList airlinesNames = sqliteAdapter->readFromTable("Code", "Airlines");
 
     for(auto airlineName : airlinesNames)
     {
-        QList<QTableWidgetItem*> name;
+        QList<QTableWidgetItem*> code;
         QTableWidgetItem* item = new QTableWidgetItem(airlineName);
-        name.push_back(item);
-        Airlines.push_back(name);
+        code.push_back(item);
+        Airlines.push_back(code);
     }
 
     for(int i = 0; i < airlinesNames.size(); i++)
     {
-        QString condition = "name = " + airlinesNames[i];
+        QString condition = "Code = " + airlinesNames[i];
+        QStringList name = sqliteAdapter->readFromTable("Name", "Airlines", condition);
         QStringList airplane = sqliteAdapter->readFromTable("Airplane", "Airlines", condition);
-        QStringList flightFrom = sqliteAdapter->readFromTable("Flight From", "Airlines", condition);
-        QStringList flightTo = sqliteAdapter->readFromTable("Flight To", "Airlines", condition);
+        QStringList flightFrom = sqliteAdapter->readFromTable("FlightFrom", "Airlines", condition);
+        QStringList flightTo = sqliteAdapter->readFromTable("FlightTo", "Airlines", condition);
 
+        Airlines[i].push_back(new QTableWidgetItem(name[0]));
         Airlines[i].push_back(new QTableWidgetItem(airplane[0]));
         Airlines[i].push_back(new QTableWidgetItem(flightFrom[0]));
         Airlines[i].push_back(new QTableWidgetItem(flightTo[0]));
@@ -123,20 +125,22 @@ QList<QList<QTableWidgetItem *> > MainWindowController::getAirlines()
 QList<QList<QTableWidgetItem *> > MainWindowController::getAirplanes()
 {
     QList< QList<QTableWidgetItem*> > Airplanes;
-    QStringList airplanesNames = sqliteAdapter->readFromTable("Type", "Airplanes");
+    QStringList airplanesNames = sqliteAdapter->readFromTable("Code", "Airplanes");
 
     for(auto airlineName : airplanesNames)
     {
-        QList<QTableWidgetItem*> name;
+        QList<QTableWidgetItem*> code;
         QTableWidgetItem* item = new QTableWidgetItem(airlineName);
-        name.push_back(item);
-        Airplanes.push_back(name);
+        code.push_back(item);
+        Airplanes.push_back(code);
     }
 
     for(int i = 0; i < airplanesNames.size(); i++)
     {
-        QString condition = "type = " + airplanesNames[i];
+        QString condition = "Code = " + airplanesNames[i];
+        QStringList type = sqliteAdapter->readFromTable("Type", "Airplanes", condition);
         QStringList date = sqliteAdapter->readFromTable("Date", "Airplanes", condition);
+        Airplanes[i].push_back(new QTableWidgetItem(type[0]));
         Airplanes[i].push_back(new QTableWidgetItem(date[0]));
     }
 
@@ -146,23 +150,25 @@ QList<QList<QTableWidgetItem *> > MainWindowController::getAirplanes()
 QList<QList<QTableWidgetItem *> > MainWindowController::getAirport()
 {
     QList< QList<QTableWidgetItem*> > Airports;
-    QStringList airportsNames = sqliteAdapter->readFromTable("Name", "Airports");
+    QStringList airportsNames = sqliteAdapter->readFromTable("Code", "Airports");
 
     for(auto airportName : airportsNames)
     {
-        QList<QTableWidgetItem*> name;
+        QList<QTableWidgetItem*> code;
         QTableWidgetItem* item = new QTableWidgetItem(airportName);
-        name.push_back(item);
-        Airports.push_back(name);
+        code.push_back(item);
+        Airports.push_back(code);
     }
 
     for(int i = 0; i < airportsNames.size(); i++)
     {
-        QString condition = "name = " + airportsNames[i];
+        QString condition = "Code = " + airportsNames[i];
+        QStringList name = sqliteAdapter->readFromTable("Name", "Airports", condition);
         QStringList location = sqliteAdapter->readFromTable("Location", "Airports", condition);
-        QStringList typeOfPlane = sqliteAdapter->readFromTable("Type of plane", "Airports", condition);
+        QStringList typeOfPlane = sqliteAdapter->readFromTable("TypeOfPlane", "Airports", condition);
         QStringList terminal = sqliteAdapter->readFromTable("Terminal", "Airports", condition);
 
+        Airports[i].push_back(new QTableWidgetItem(name[0]));
         Airports[i].push_back(new QTableWidgetItem(location[0]));
         Airports[i].push_back(new QTableWidgetItem(typeOfPlane[0]));
         Airports[i].push_back(new QTableWidgetItem(terminal[0]));
