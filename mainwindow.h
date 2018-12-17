@@ -17,11 +17,17 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void updateOneWorld();
+    void updateAirlines();
+    void updateAirplanes();
+    void updateAirports();
     void viewTables();
     void setRequests();
 
 private slots:
-
+    void showDatabaseDisconnected();
+    void showDatabaseConnected();
+    void setupDatabaseWidgets();
 
     void on_queryComboBox_activated(int index);
 

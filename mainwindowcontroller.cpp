@@ -85,16 +85,18 @@ QList<QList<QTableWidgetItem *> > MainWindowController::getOneWorld()
 
     for(int i = 0; i < airlinesNames.size(); i++)
     {
-        QString condition = "name = " + airlinesNames[i];
+        QString condition = "Name = " + airlinesNames[i];
         QStringList country = sqliteAdapter->readFromTable("Country", "OneWorld", condition);
         QStringList loginDate = sqliteAdapter->readFromTable("Login Date", "OneWorld", condition);
         QStringList releaseDate = sqliteAdapter->readFromTable("Release Date", "OneWorld", condition);
 
-        oneWorld[i].push_back(new QTableWidgetItem(country[0]));
+        /*oneWorld[i].push_back(new QTableWidgetItem(country[0]));
+        qDebug() << country[0];
         oneWorld[i].push_back(new QTableWidgetItem(loginDate[0]));
         oneWorld[i].push_back(new QTableWidgetItem(releaseDate[0]));
+        qDebug() << oneWorld;*/
     }
-
+    qDebug() << "Fail!";
     return oneWorld;
 }
 
