@@ -106,7 +106,7 @@ QStringList SQLiteAdapter::getTablesNames()
 
 QSqlQuery SQLiteAdapter::runSQL(QString request)
 {
-    qDebug() << request;
+    //qDebug() << request;
     QString tmp = request;
     QSqlQuery query;
     if(query.prepare(tmp))
