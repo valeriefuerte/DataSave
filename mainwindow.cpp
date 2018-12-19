@@ -107,6 +107,7 @@ void MainWindow::updateAirplanes()
     QStringList labels = {
         "Код",
         "Тип самолета",
+        "Авиакомпания",
         "Дата начала эксплуатации"
     };
     ui->AirplaneTableWidget->setColumnCount(labels.size());
@@ -151,7 +152,7 @@ void MainWindow::updateAirports()
 
 void MainWindow::setRequests()
 {
-    ui->queryComboBox->addItem("Все самолеты авиакомпании Аэрофлот старше 30 лет");
+    ui->queryComboBox->addItem("Все самолеты младше 10 лет");
     ui->queryComboBox->addItem("Список авиакомпаний из альянса OneWorld, которые вошли в него в 2008 году и вышли в 2010");
     ui->queryComboBox->addItem("Все общие рейсы авиакомпаний   ");
     ui->queryComboBox->addItem("Все самолеты из альянса OneWorld");
@@ -164,15 +165,62 @@ void MainWindow::on_queryComboBox_activated(int index)
     switch (index)
     {
         case 0:
-            /*QString request = "SELECT COUNT(code) FROM Hen";
-            QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(birdsCountRequest);
+            {
+            QString request = "SELECT Name,  Airplane, Date FROM Airlines JOIN Airplanes ON (Airlines.Airplane = Airplanes.Type AND Airlines.Name == Airplanes.Airline)  WHERE (Airplanes.Date > 2008)";
+            ui->sqlTextEdit->setText(request);
+            QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
+            qDebug() << query.value(0);
+
+            int count = 0;
+            QStringList l1;
+            QStringList l2;
+            QStringList l3;
             while (query.next())
             {
-                ui->responseTextEdit->append("Общее число птиц: " + query.value(0).toString());
-            }*/
-            qDebug() << "Все самолеты авиакомпании Аэрофлот старше 30 лет";
-            break;
+                count++;
+                QString n = query.value(0).toString();
+                l1.push_back(n);
+                QString a = query.value(1).toString();
+                l2.push_back(a);
+                QString d = query.value(2).toString();
+                l3.push_back(d);
+            }
+            qDebug() << count;
+            qDebug() << l1;
+            qDebug() << l2;
+            qDebug() << l3;
 
+            QStringList labels = {
+                "Название",
+                "Самолет",
+                "Дата начала эксплуатации"
+            };
+            ui->resultTableWidget->setColumnCount(labels.size());
+            ui->resultTableWidget->setHorizontalHeaderLabels(labels);
+            ui->resultTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+            ui->resultTableWidget->setRowCount(l1.size());
+
+            for(int i = 0; i < count; i++)
+            {
+                qDebug() << "i: "<< i;
+                for(int j = 0; j < l1.size()/3; j++)
+                {
+//                    qDebug() << "j: "<< j;
+//                    qDebug() << "l.value(i)" << l.value(i);
+//                    qDebug() << "l.value(j)" << l.value(j);
+                    QString n = l1.value(i);
+                    QTableWidgetItem *item = new QTableWidgetItem(n);
+                    QString a = l2.value(i);
+                    QTableWidgetItem *itemA = new QTableWidgetItem(a);
+                    QString d = l3.value(i);
+                    QTableWidgetItem *itemD = new QTableWidgetItem(d);
+                    ui->resultTableWidget->setItem(i, j, item);
+                    ui->resultTableWidget->setItem(i, j+1, itemA);
+                    ui->resultTableWidget->setItem(i, j+2, itemD);
+                }
+            }
+            break;
+            }
         case 1:
             {
             QString request = "SELECT OneWorld.Name, OneWorld.Country FROM OneWorld WHERE ( OneWorld.[LoginDate]==2008 and OneWorld.[ReleaseDate]==2010)";

@@ -139,8 +139,10 @@ QList<QList<QTableWidgetItem *> > MainWindowController::getAirplanes()
     {
         QString condition = "Code = " + airplanesNames[i];
         QStringList type = sqliteAdapter->readFromTable("Type", "Airplanes", condition);
+        QStringList airline = sqliteAdapter->readFromTable("Airline", "Airplanes", condition);
         QStringList date = sqliteAdapter->readFromTable("Date", "Airplanes", condition);
         Airplanes[i].push_back(new QTableWidgetItem(type[0]));
+        Airplanes[i].push_back(new QTableWidgetItem(airline[0]));
         Airplanes[i].push_back(new QTableWidgetItem(date[0]));
     }
 
