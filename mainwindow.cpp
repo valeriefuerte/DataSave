@@ -159,6 +159,7 @@ void MainWindow::setRequests()
     ui->queryComboBox->addItem("Минимальный, максимальный и средний год начала эксплуатации самолетов");
     ui->queryComboBox->addItem("Все авиакомпании, которые состоят в альянсе OneWorld в настоящее время в порядке вхождения в альянс");
     ui->queryComboBox->addItem("Вывести список всех самолетов типа Airbus");
+    ui->queryComboBox->addItem("Все самолеты, прилетающие в Пулково, терминал 1");
 }
 
 void MainWindow::on_queryComboBox_activated(int index)
@@ -207,7 +208,7 @@ void MainWindow::on_queryComboBox_activated(int index)
             for(int i = 0; i < count; i++)
             {
                 qDebug() << "i: "<< i;
-                for(int j = 0; j < l1.size()/3; j++)
+                for(int j = 0; j < l1.size()/count; j++)
                 {
 //                    qDebug() << "j: "<< j;
 //                    qDebug() << "l.value(i)" << l.value(i);
@@ -255,7 +256,7 @@ void MainWindow::on_queryComboBox_activated(int index)
 
             for(int i = 0; i < count; i++)
             {
-                for(int j = 0; j < listN.size()/2; j++)
+                for(int j = 0; j < listN.size()/count; j++)
                 {
                     QString s = listN.value(i);
                     QTableWidgetItem *item = new QTableWidgetItem(s);
@@ -339,7 +340,7 @@ void MainWindow::on_queryComboBox_activated(int index)
 
             for(int i = 0; i < count; i++)
             {
-                for(int j = 0; j < listN.size()/2; j++)
+                for(int j = 0; j < listN.size()/count; j++)
                 {
                     QString s = listN.value(i);
                     QTableWidgetItem *item = new QTableWidgetItem(s);
@@ -494,45 +495,57 @@ void MainWindow::on_queryComboBox_activated(int index)
 
     case 7:
         {
-        qDebug() << "Все самолеты из альянса OneWorld в порядке, обратном лексиграфическому";
-        QString request = "SELECT Type, Airline FROM Airplanes JOIN OneWorld On (Airplanes.Airline = OneWorld.Name) GROUP By Airplanes.Type ORDER BY Airplanes.Type DESC";
+        qDebug() << "Все самолеты, прилетающие в Пулково, терминал 1";
+        QString request = "SELECT TypeOfPlane, Name, Terminal FROM Airports WHERE Airports.Name = 'Пулково' AND Airports.Terminal = 1 ORDER BY Airports.TypeOfPlane ASC";
         ui->sqlTextEdit->setText(request);
         QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
 
         int count = 0;
-        QStringList listN;
-        QStringList listC;
+        QStringList l1;
+        QStringList l2;
+        QStringList l3;
         while (query.next())
         {
             count++;
             QString n = query.value(0).toString();
-            listN.push_back(n);
-            QString c = query.value(1).toString();
-            listC.push_back(c);
+            l1.push_back(n);
+            QString a = query.value(1).toString();
+            l2.push_back(a);
+            QString d = query.value(2).toString();
+            l3.push_back(d);
         }
         qDebug() << count;
-        qDebug() << listN;
-        qDebug() << listC;
+        qDebug() << l1;
+        qDebug() << l2;
+        qDebug() << l3;
 
         QStringList labels = {
+            "Самолет",
             "Название",
-            "Страна"
+            "Терминал"
         };
         ui->resultTableWidget->setColumnCount(labels.size());
         ui->resultTableWidget->setHorizontalHeaderLabels(labels);
         ui->resultTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-        ui->resultTableWidget->setRowCount(listN.size());
+        ui->resultTableWidget->setRowCount(l1.size());
 
         for(int i = 0; i < count; i++)
         {
-            for(int j = 0; j < listN.size()/2; j++)
+            qDebug() << "i: "<< i;
+            for(int j = 0; j < l1.size()/count; j++)
             {
-                QString s = listN.value(i);
-                QTableWidgetItem *item = new QTableWidgetItem(s);
-                QString t = listC.value(i);
-                QTableWidgetItem *itemT = new QTableWidgetItem(t);
+//                    qDebug() << "j: "<< j;
+//                    qDebug() << "l.value(i)" << l.value(i);
+//                    qDebug() << "l.value(j)" << l.value(j);
+                QString n = l1.value(i);
+                QTableWidgetItem *item = new QTableWidgetItem(n);
+                QString a = l2.value(i);
+                QTableWidgetItem *itemA = new QTableWidgetItem(a);
+                QString d = l3.value(i);
+                QTableWidgetItem *itemD = new QTableWidgetItem(d);
                 ui->resultTableWidget->setItem(i, j, item);
-                ui->resultTableWidget->setItem(i, j+1, itemT);
+                ui->resultTableWidget->setItem(i, j+1, itemA);
+                ui->resultTableWidget->setItem(i, j+2, itemD);
             }
         }
         break;
