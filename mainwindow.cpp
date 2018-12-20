@@ -158,6 +158,7 @@ void MainWindow::setRequests()
     ui->queryComboBox->addItem("Все самолеты из альянса OneWorld в порядке, обратном лексиграфическому");
     ui->queryComboBox->addItem("Минимальный, максимальный и средний год начала эксплуатации самолетов");
     ui->queryComboBox->addItem("Все авиакомпании, которые состоят в альянсе OneWorld в настоящее время в порядке вхождения в альянс");
+    ui->queryComboBox->addItem("Вывести список всех самолетов типа Airbus");
 }
 
 void MainWindow::on_queryComboBox_activated(int index)
@@ -445,45 +446,47 @@ void MainWindow::on_queryComboBox_activated(int index)
 
     case 6:
         {
-        qDebug() << "Все самолеты из альянса OneWorld в порядке, обратном лексиграфическому";
-        QString request = "SELECT Type, Airline FROM Airplanes JOIN OneWorld On (Airplanes.Airline = OneWorld.Name) GROUP By Airplanes.Type ORDER BY Airplanes.Type DESC";
+        qDebug() << "Вывести список всех самолетов типа Airbus";
+        QString request = "SELECT DISTINCT Type, Airline, Date FROM Airplanes  JOIN Airports ON (Airplanes.Type = Airports.TypeOfPlane) WHERE (Airplanes.Type LIKE 'Airbus%') ";
         ui->sqlTextEdit->setText(request);
         QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
 
         int count = 0;
-        QStringList listN;
-        QStringList listC;
+        QStringList listT;
+        QStringList listA;
+
         while (query.next())
         {
             count++;
-            QString n = query.value(0).toString();
-            listN.push_back(n);
-            QString c = query.value(1).toString();
-            listC.push_back(c);
+            QString t = query.value(0).toString();
+            listT.push_back(t);
+            QString a = query.value(1).toString();
+            listA.push_back(a);
         }
         qDebug() << count;
-        qDebug() << listN;
-        qDebug() << listC;
+        qDebug() << listT;
+        qDebug() << listA;
 
         QStringList labels = {
-            "Название",
-            "Страна"
+            "Тип самолета",
+            "Авиакомпания"
         };
         ui->resultTableWidget->setColumnCount(labels.size());
         ui->resultTableWidget->setHorizontalHeaderLabels(labels);
         ui->resultTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-        ui->resultTableWidget->setRowCount(listN.size());
+        ui->resultTableWidget->setRowCount(listT.size());
 
         for(int i = 0; i < count; i++)
         {
-            for(int j = 0; j < listN.size()/2; j++)
+            for(int j = 0; j < listT.size()/count; j++)
             {
-                QString s = listN.value(i);
-                QTableWidgetItem *item = new QTableWidgetItem(s);
-                QString t = listC.value(i);
-                QTableWidgetItem *itemT = new QTableWidgetItem(t);
-                ui->resultTableWidget->setItem(i, j, item);
-                ui->resultTableWidget->setItem(i, j+1, itemT);
+                QString t = listT.value(i);
+                QTableWidgetItem *item1 = new QTableWidgetItem(t);
+                QString a = listA.value(i);
+                QTableWidgetItem *item2 = new QTableWidgetItem(a);
+                ui->resultTableWidget->setItem(i, j, item1);
+                ui->resultTableWidget->setItem(i, j+1, item2);
+
             }
         }
         break;
