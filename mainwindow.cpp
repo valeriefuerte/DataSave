@@ -157,6 +157,7 @@ void MainWindow::setRequests()
     ui->queryComboBox->addItem("Все авиакомпании, летающие из Москвы в Тиват");
     ui->queryComboBox->addItem("Все самолеты из альянса OneWorld в порядке, обратном лексиграфическому");
     ui->queryComboBox->addItem("Минимальный, максимальный и средний год начала эксплуатации самолетов");
+    ui->queryComboBox->addItem("Все авиакомпании, которые состоят в альянсе OneWorld в настоящее время в порядке вхождения в альянс");
 }
 
 void MainWindow::on_queryComboBox_activated(int index)
@@ -393,6 +394,54 @@ void MainWindow::on_queryComboBox_activated(int index)
         ui->resultTableWidget->setItem(0, 2, item2);
         break;
     }
+
+    case 5:
+        {
+        qDebug() << "Все авиакомпании, которые состоят в альянсе OneWorld в настоящее время в порядке вхождения в альянс";
+        QString request = "SELECT Name, LoginDate FROM OneWorld WHERE (OneWorld.ReleaseDate is Null) ORDER BY OneWorld.LoginDate ASC";
+        ui->sqlTextEdit->setText(request);
+        QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
+
+        int count = 0;
+        QStringList listN;
+        QStringList listC;
+        while (query.next())
+        {
+            count++;
+            QString n = query.value(0).toString();
+            listN.push_back(n);
+            QString c = query.value(1).toString();
+            listC.push_back(c);
+        }
+        qDebug() << count;
+        qDebug() << listN;
+        qDebug() << listC;
+
+        QStringList labels = {
+            "Название",
+            "Год"
+        };
+        ui->resultTableWidget->setColumnCount(labels.size());
+        ui->resultTableWidget->setHorizontalHeaderLabels(labels);
+        ui->resultTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->resultTableWidget->setRowCount(listN.size());
+
+        for(int i = 0; i < count; i++)
+        {
+            for(int j = 0; j < listN.size()/count; j++)
+            {
+                QString s = listN.value(i);
+                qDebug() << s;
+                QTableWidgetItem *item = new QTableWidgetItem(s);
+                QString t = listC.value(i);
+                qDebug() << t;
+                QTableWidgetItem *item1 = new QTableWidgetItem(t);
+                ui->resultTableWidget->setItem(i, j, item);
+                ui->resultTableWidget->setItem(i, j+1, item1);
+            }
+        }
+        break;
+        }
 
     case 6:
         {
