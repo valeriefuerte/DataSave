@@ -163,6 +163,10 @@ void MainWindow::setRequests()
     ui->queryComboBox->addItem("Таблица, состоящая из полей: расположение, тип самолета, терминал, где номер терминала может быть от 1 до 3");
     ui->queryComboBox->addItem("Все рейсы, вылетающие из Гамбурга и все рейсы, прилетающие в Доху");
     ui->queryComboBox->addItem("Все самолеты, которые принадлежат авиакомпаниям входящим в альянс OneWorld, в алфавитном порядке по имени авиакомпании");
+    ui->queryComboBox->addItem("Все самолеты, которые принадлежат авиакомпаниям вышедшим из альянса OneWorld");
+    ui->queryComboBox->addItem("");
+    ui->queryComboBox->addItem("");
+    ui->queryComboBox->addItem("");
 }
 
 void MainWindow::on_queryComboBox_activated(int index)
@@ -724,7 +728,51 @@ void MainWindow::on_queryComboBox_activated(int index)
         break;
         }
 
+    case 11:
+        {
+        qDebug() << "Все самолеты, которые принадлежат авиакомпаниям вышедшим из альянса OneWorld";
+        QString request = "SELECT Type, Airline FROM Airplanes JOIN Airlines ON (Airplanes.Type = Airlines.Airplane AND Airplanes.Airline = Airlines.Name) JOIN OneWorld ON (Airplanes.Airline = OneWorld.Name) WHERE (OneWorld.ReleaseDate is NOT Null)";
+        ui->sqlTextEdit->setText(request);
+        QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
 
+        int count = 0;
+        QStringList listN;
+        QStringList listC;
+        while (query.next())
+        {
+            count++;
+            QString n = query.value(0).toString();
+            listN.push_back(n);
+            QString c = query.value(1).toString();
+            listC.push_back(c);
+        }
+        qDebug() << count;
+        qDebug() << listN;
+        qDebug() << listC;
+
+        QStringList labels = {
+            "Тип самолета",
+            "Авиакомпания"
+        };
+        ui->resultTableWidget->setColumnCount(labels.size());
+        ui->resultTableWidget->setHorizontalHeaderLabels(labels);
+        ui->resultTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->resultTableWidget->setRowCount(listN.size());
+
+        for(int i = 0; i < count; i++)
+        {
+            for(int j = 0; j < listN.size()/count; j++)
+            {
+                QString s = listN.value(i);
+                QTableWidgetItem *item = new QTableWidgetItem(s);
+                QString t = listC.value(i);
+                QTableWidgetItem *itemT = new QTableWidgetItem(t);
+                ui->resultTableWidget->setItem(i, j, item);
+                ui->resultTableWidget->setItem(i, j+1, itemT);
+            }
+        }
+        break;
+        }
 
 
 
