@@ -162,6 +162,7 @@ void MainWindow::setRequests()
     ui->queryComboBox->addItem("Все самолеты, прилетающие в Пулково, терминал 1");
     ui->queryComboBox->addItem("Таблица, состоящая из полей: расположение, тип самолета, терминал, где номер терминала может быть от 1 до 3");
     ui->queryComboBox->addItem("Все рейсы, вылетающие из Гамбурга и все рейсы, прилетающие в Доху");
+    ui->queryComboBox->addItem("Все самолеты, которые принадлежат авиакомпаниям входящим в альянс OneWorld, в алфавитном порядке по имени авиакомпании");
 }
 
 void MainWindow::on_queryComboBox_activated(int index)
@@ -679,8 +680,8 @@ void MainWindow::on_queryComboBox_activated(int index)
 
     case 10:
         {
-        qDebug() << "Все самолеты из альянса OneWorld в порядке, обратном лексиграфическому";
-        QString request = "SELECT Type, Airline FROM Airplanes JOIN OneWorld On (Airplanes.Airline = OneWorld.Name) GROUP By Airplanes.Type ORDER BY Airplanes.Type DESC";
+        qDebug() << "Все самолеты, которые принадлежат авиакомпаниям входящим в альянс OneWorld, в алфавитном порядке по имени авиакомпании";
+        QString request = "SELECT Type, Airline FROM Airplanes JOIN OneWorld ON (Airplanes.Airline = OneWorld.Name) ORDER BY OneWorld.Name ASC";
         ui->sqlTextEdit->setText(request);
         QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
 
@@ -700,8 +701,8 @@ void MainWindow::on_queryComboBox_activated(int index)
         qDebug() << listC;
 
         QStringList labels = {
-            "Название",
-            "Страна"
+            "Тип самолета",
+            "Авиакомпания"
         };
         ui->resultTableWidget->setColumnCount(labels.size());
         ui->resultTableWidget->setHorizontalHeaderLabels(labels);
@@ -710,7 +711,7 @@ void MainWindow::on_queryComboBox_activated(int index)
 
         for(int i = 0; i < count; i++)
         {
-            for(int j = 0; j < listN.size()/2; j++)
+            for(int j = 0; j < listN.size()/count; j++)
             {
                 QString s = listN.value(i);
                 QTableWidgetItem *item = new QTableWidgetItem(s);
