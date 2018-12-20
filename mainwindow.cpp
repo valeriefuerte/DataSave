@@ -166,7 +166,7 @@ void MainWindow::setRequests()
     ui->queryComboBox->addItem("Все самолеты, которые принадлежат авиакомпаниям вышедшим из альянса OneWorld");
     ui->queryComboBox->addItem("Все самолеты, прилетающие в Москву и данные о которых есть в таблицах Аэропорты и Самолеты в алфавитном порядке");
     ui->queryComboBox->addItem("Все авиакомпании, входящие в альянс OneWorld и летающие в Хельсинки");
-    ui->queryComboBox->addItem("");
+    ui->queryComboBox->addItem("Все самолеты, вступившие в 1999 году и входящие в настоящее время в альянс OneWorld");
 }
 
 void MainWindow::on_queryComboBox_activated(int index)
@@ -236,7 +236,7 @@ void MainWindow::on_queryComboBox_activated(int index)
         case 1:
             {
             qDebug() << "Список авиакомпаний из альянса OneWorld, которые вошли в него в 2008 году и вышли в 2010";
-            QString request = "SELECT OneWorld.Name, OneWorld.Country FROM OneWorld WHERE ( OneWorld.[LoginDate]==2008 and OneWorld.[ReleaseDate]==2010)";
+            QString request = "SELECT OneWorld.Name, OneWorld.Country FROM OneWorld WHERE ( OneWorld.LoginDate = 2008 and OneWorld.ReleaseDate = 2010)";
             ui->sqlTextEdit->setText(request);
             QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
 
@@ -279,7 +279,7 @@ void MainWindow::on_queryComboBox_activated(int index)
         case 2:
             {
             qDebug() << "Все авиакомпании, летающие из Москвы в Тиват";
-            QString request = "SELECT Name FROM Airlines WHERE (Airlines.FlightFrom == 'Москва' AND Airlines.FlightTo == 'Тиват')";
+            QString request = "SELECT Name FROM Airlines WHERE (Airlines.FlightFrom = 'Москва' AND Airlines.FlightTo = 'Тиват')";
             ui->sqlTextEdit->setText(request);
             QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
 
@@ -873,6 +873,64 @@ void MainWindow::on_queryComboBox_activated(int index)
                 QTableWidgetItem *itemT = new QTableWidgetItem(t);
                 ui->resultTableWidget->setItem(i, j, item);
                 ui->resultTableWidget->setItem(i, j+1, itemT);
+            }
+        }
+        break;
+        }
+
+    case 14:
+        {
+        qDebug() << "Все самолеты, вступившие в 1999 году и входящие в настоящее время в альянс OneWorld";
+        QString request = "SELECT Type, Airline, Country FROM Airplanes JOIN OneWorld ON (Airplanes.Airline = OneWorld.Name) WHERE ( OneWorld.LoginDate=1999 AND OneWorld.ReleaseDate IS NULL)";
+        ui->sqlTextEdit->setText(request);
+        QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
+
+        int count = 0;
+        QStringList l1;
+        QStringList l2;
+        QStringList l3;
+        while (query.next())
+        {
+            count++;
+            QString n = query.value(0).toString();
+            l1.push_back(n);
+            QString a = query.value(1).toString();
+            l2.push_back(a);
+            QString d = query.value(2).toString();
+            l3.push_back(d);
+        }
+        qDebug() << count;
+        qDebug() << l1;
+        qDebug() << l2;
+        qDebug() << l3;
+
+        QStringList labels = {
+            "Тип самолета",
+            "Авиакомпания",
+            "Страна"
+        };
+        ui->resultTableWidget->setColumnCount(labels.size());
+        ui->resultTableWidget->setHorizontalHeaderLabels(labels);
+        ui->resultTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->resultTableWidget->setRowCount(l1.size());
+
+        for(int i = 0; i < count; i++)
+        {
+            qDebug() << "i: "<< i;
+            for(int j = 0; j < l1.size()/count; j++)
+            {
+//                    qDebug() << "j: "<< j;
+//                    qDebug() << "l.value(i)" << l.value(i);
+//                    qDebug() << "l.value(j)" << l.value(j);
+                QString n = l1.value(i);
+                QTableWidgetItem *item = new QTableWidgetItem(n);
+                QString a = l2.value(i);
+                QTableWidgetItem *itemA = new QTableWidgetItem(a);
+                QString d = l3.value(i);
+                QTableWidgetItem *itemD = new QTableWidgetItem(d);
+                ui->resultTableWidget->setItem(i, j, item);
+                ui->resultTableWidget->setItem(i, j+1, itemA);
+                ui->resultTableWidget->setItem(i, j+2, itemD);
             }
         }
         break;
