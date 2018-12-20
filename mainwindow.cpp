@@ -154,7 +154,7 @@ void MainWindow::setRequests()
 {
     ui->queryComboBox->addItem("Все самолеты младше 10 лет");
     ui->queryComboBox->addItem("Список авиакомпаний из альянса OneWorld, которые вошли в него в 2008 году и вышли в 2010");
-    ui->queryComboBox->addItem("Все общие рейсы авиакомпаний   ");
+    ui->queryComboBox->addItem("Все авиакомпании, летающие из Москвы в Тиват");
     ui->queryComboBox->addItem("Все самолеты из альянса OneWorld");
 }
 
@@ -264,8 +264,41 @@ void MainWindow::on_queryComboBox_activated(int index)
             }
 
         case 2:
-            qDebug() << "Все общие рейсы авиакомпаний   ";
+            {
+            QString request = "SELECT Name FROM Airlines WHERE (Airlines.FlightFrom == 'Москва' AND Airlines.FlightTo == 'Тиват')";
+            ui->sqlTextEdit->setText(request);
+            QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
+
+            int count = 0;
+            QStringList list;
+            while (query.next())
+            {
+                count++;
+                QString n = query.value(0).toString();
+                list.push_back(n);
+            }
+            qDebug() << count;
+            qDebug() << list;
+
+            QStringList labels = {
+                "Название"
+            };
+            ui->resultTableWidget->setColumnCount(labels.size());
+            ui->resultTableWidget->setHorizontalHeaderLabels(labels);
+            ui->resultTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+            ui->resultTableWidget->setRowCount(list.size());
+
+            for(int i = 0; i < count; i++)
+            {
+                for(int j = 0; j < list.size(); j++)
+                {
+                    QString s = list.value(i);
+                    QTableWidgetItem *item = new QTableWidgetItem(s);
+                    ui->resultTableWidget->setItem(i, j, item);
+                }
+            }
             break;
+            }
 
         case 3:
             qDebug() << "Все самолеты из альянса OneWorld";
