@@ -155,7 +155,7 @@ void MainWindow::setRequests()
     ui->queryComboBox->addItem("Все самолеты младше 10 лет");
     ui->queryComboBox->addItem("Список авиакомпаний из альянса OneWorld, которые вошли в него в 2008 году и вышли в 2010");
     ui->queryComboBox->addItem("Все авиакомпании, летающие из Москвы в Тиват");
-    ui->queryComboBox->addItem("Все самолеты из альянса OneWorld");
+    ui->queryComboBox->addItem("Все самолеты из альянса OneWorld в порядке, обратном лексиграфическому");
 }
 
 void MainWindow::on_queryComboBox_activated(int index)
@@ -166,6 +166,7 @@ void MainWindow::on_queryComboBox_activated(int index)
     {
         case 0:
             {
+            qDebug() << "Все самолеты младше 10 лет";
             QString request = "SELECT Name,  Airplane, Date FROM Airlines JOIN Airplanes ON (Airlines.Airplane = Airplanes.Type AND Airlines.Name == Airplanes.Airline)  WHERE (Airplanes.Date > 2008)";
             ui->sqlTextEdit->setText(request);
             QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
@@ -223,6 +224,7 @@ void MainWindow::on_queryComboBox_activated(int index)
             }
         case 1:
             {
+            qDebug() << "Список авиакомпаний из альянса OneWorld, которые вошли в него в 2008 году и вышли в 2010";
             QString request = "SELECT OneWorld.Name, OneWorld.Country FROM OneWorld WHERE ( OneWorld.[LoginDate]==2008 and OneWorld.[ReleaseDate]==2010)";
             ui->sqlTextEdit->setText(request);
             QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
@@ -265,6 +267,7 @@ void MainWindow::on_queryComboBox_activated(int index)
 
         case 2:
             {
+            qDebug() << "Все авиакомпании, летающие из Москвы в Тиват";
             QString request = "SELECT Name FROM Airlines WHERE (Airlines.FlightFrom == 'Москва' AND Airlines.FlightTo == 'Тиват')";
             ui->sqlTextEdit->setText(request);
             QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
@@ -301,8 +304,50 @@ void MainWindow::on_queryComboBox_activated(int index)
             }
 
         case 3:
-            qDebug() << "Все самолеты из альянса OneWorld";
+            {
+            qDebug() << "Все самолеты из альянса OneWorld в порядке, обратном лексиграфическому";
+            QString request = "SELECT Type, Airline FROM Airplanes JOIN OneWorld On (Airplanes.Airline = OneWorld.Name) GROUP By Airplanes.Type ORDER BY Airplanes.Type DESC";
+            ui->sqlTextEdit->setText(request);
+            QSqlQuery query = mainWindowController->getSqliteAdapter()->runSQL(request);
+
+            int count = 0;
+            QStringList listN;
+            QStringList listC;
+            while (query.next())
+            {
+                count++;
+                QString n = query.value(0).toString();
+                listN.push_back(n);
+                QString c = query.value(1).toString();
+                listC.push_back(c);
+            }
+            qDebug() << count;
+            qDebug() << listN;
+            qDebug() << listC;
+
+            QStringList labels = {
+                "Название",
+                "Страна"
+            };
+            ui->resultTableWidget->setColumnCount(labels.size());
+            ui->resultTableWidget->setHorizontalHeaderLabels(labels);
+            ui->resultTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+            ui->resultTableWidget->setRowCount(listN.size());
+
+            for(int i = 0; i < count; i++)
+            {
+                for(int j = 0; j < listN.size()/2; j++)
+                {
+                    QString s = listN.value(i);
+                    QTableWidgetItem *item = new QTableWidgetItem(s);
+                    QString t = listC.value(i);
+                    QTableWidgetItem *itemT = new QTableWidgetItem(t);
+                    ui->resultTableWidget->setItem(i, j, item);
+                    ui->resultTableWidget->setItem(i, j+1, itemT);
+                }
+            }
             break;
+            }
 
         default:
             break;
